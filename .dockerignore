@@ -1,0 +1,9 @@
+.idea
+.git
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+src/.env

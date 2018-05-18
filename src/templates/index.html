@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crondeck</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style>
+      .container {
+        max-width: 1000px;
+      }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Crondeck</h1>
+    <form role="form" method='POST' action='/'>
+        <div class="form-group">
+            <input type="text" name="project_name" class="form-control" id="url-box"
+                   placeholder="Enter a project name..." style="max-width: 300px;" autofocus required>
+        </div>
+        <button type="submit" class="btn btn-info">Submit</button>
+    </form>
+    <br>
+    {% if results %}
+    <h2>Status of scheduled jobs</h2>
+    <br>
+    <div id="results">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Status</th>
+                <th>Name</th>
+                <th>Project</th>
+                <th>Last Execution</th>
+            </tr>
+            </thead>
+            {% for result in results%}
+            {% if result['status'] == "succeeded" %}
+            {% set label_class = "label label-success label-sm" %}
+            {% elif result['status'] == "failed" %}
+            {% set label_class = "label label-danger label-sm" %}
+            {% elif result['status'] == "running" or result['status'] == "aborted" %}
+            {% set label_class = "label label-warning label-sm" %}
+            {% endif %}
+
+            <tr>
+                <td><h4><span class="{{ label_class }}">{{ result['status'] }}</span></td>
+                <td><a href="{{ url_for('show_last_executions', job_id=result['job']['id']) }}">{{ result['job']['name'] }}</a></td>
+                <td>{{ result['project']}}</td>
+                <td>{{ result['date-started']['date'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% endif %}
+    <br>
+    {% for error in errors %}
+    <h4>{{ error }}</h4>
+    {% endfor %}
+</div>
+<script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</body>
+</html>
